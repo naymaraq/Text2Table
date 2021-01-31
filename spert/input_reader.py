@@ -140,6 +140,25 @@ class JsonInputReader(BaseInputReader):
 
         self._context_size = self._calc_context_size(self._datasets.values())
 
+    def read_for_infer(self, samples):
+        dataset_label="infer"
+        dataset = Dataset(dataset_label, self._relation_types, self._entity_types, self._neg_entity_count,
+                          self._neg_rel_count, self._max_span_size)
+        for sample_tokens in samples:
+            self._parse_sample_for_infer(sample_tokens, dataset)
+
+        self._datasets[dataset_label] = dataset
+        self._context_size = self._calc_context_size(self._datasets.values())
+
+    def _parse_sample_for_infer(self, jtokens, dataset):
+        # parse tokens
+        doc_tokens, doc_encoding = self._parse_tokens(jtokens, dataset)
+
+        # create document
+        document = dataset.create_document(doc_tokens, [], [], doc_encoding)
+        return document
+
+
     def _parse_dataset(self, dataset_path, dataset):
         documents = json.load(open(dataset_path))
         for document in tqdm(documents, desc="Parse dataset '%s'" % dataset.label):

@@ -134,9 +134,9 @@ class Evaluator:
 
         return ner_eval, rel_eval, rel_nec_eval
 
-    def store_predictions(self):
-        predictions = []
+    def get_preds(self):
 
+        predictions = []
         for i, doc in enumerate(self._dataset.documents):
             tokens = doc.tokens
             pred_entities = self._pred_entities[i]
@@ -178,6 +178,11 @@ class Evaluator:
                                    relations=converted_relations)
             predictions.append(doc_predictions)
 
+        return predictions
+
+    def store_predictions(self):
+
+        predictions = self.get_preds()
         # store as json
         label, epoch = self._dataset_label, self._epoch
         with open(self._predictions_path % (label, epoch), 'w') as predictions_file:
