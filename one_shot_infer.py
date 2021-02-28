@@ -90,9 +90,11 @@ class SpertClinet:
         return self.forward(tokens)
 
 
-def process_config():
+def process_config(config_path=None):
     arg_parser = eval_argparser()
     args, _ = arg_parser.parse_known_args()
+    if config_path:
+        args.__setattr__("config", config_path)
     config = _read_config(args.config)
 
     _, run_config = config[0]
@@ -111,5 +113,4 @@ def process_config():
 if __name__ == "__main__":
     run_args, run_config = process_config()
     spert_clinet = SpertClinet(run_args)
-    preds = spert_clinet(["Trump kill Mickel Jeckson", "Trump kill Mickel Jeckson", "Krisp is based in Yerevan capital of Armenia."])
-    print(preds)
+    preds = spert_clinet(["Trump kill Mickel Jeckson"]*1000)
