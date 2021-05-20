@@ -28,7 +28,6 @@ class SpertClinet:
                                             tokenizer=self._tokenizer,
                                             max_span_size=args.max_span_size)
         self._device = "cpu"#torch.device("cuda" if torch.cuda.is_available() and not args.cpu else "cpu")
-        print(self._device)
         self._load_model()
         print("Model is loaded!")
 
@@ -111,9 +110,9 @@ def process_config(config_path=None):
     return run_args, run_config
 
 
-if __name__ == "__main__":
-    run_args, run_config = process_config()
-    spert_clinet = SpertClinet(run_args)
-    preds = spert_clinet(["Trump kill Mickel Jeckson", "Alice worked at SturBucks", "David lives in Goris city."])
-    _, rel_triples = prettify(preds)
-    integrate(rel_triples)
+#if __name__ == "__main__":
+#    run_args, run_config = process_config()
+#    spert_clinet = SpertClinet(run_args)
+#    preds = spert_clinet(["Trump kill Mickel Jeckson", "Alice worked at SturBucks", "David lives in Goris city."])
+#    _, rel_triples = prettify(preds)
+#    integrate(rel_triples)
