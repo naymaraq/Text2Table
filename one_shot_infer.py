@@ -15,8 +15,8 @@ from spert import util
 from spert.entities import Dataset
 from spert.evaluator import Evaluator
 from spert.input_reader import JsonInputReader
-
-
+from utils import prettify
+from data_warehouse import integrate 
 class SpertClinet:
 
     def __init__(self, args):
@@ -27,9 +27,10 @@ class SpertClinet:
         self.input_reader = JsonInputReader(types_path=args.types_path,
                                             tokenizer=self._tokenizer,
                                             max_span_size=args.max_span_size)
-        self._device = torch.device("cuda" if torch.cuda.is_available() and not args.cpu else "cpu")
-
+        self._device = "cpu"#torch.device("cuda" if torch.cuda.is_available() and not args.cpu else "cpu")
+        print(self._device)
         self._load_model()
+        print("Model is loaded!")
 
     def _load_model(self):
         model_class = models.get_model(self.args.model_type)
@@ -113,4 +114,6 @@ def process_config(config_path=None):
 if __name__ == "__main__":
     run_args, run_config = process_config()
     spert_clinet = SpertClinet(run_args)
-    preds = spert_clinet(["Trump kill Mickel Jeckson"]*1000)
+    preds = spert_clinet(["Trump kill Mickel Jeckson", "Alice worked at SturBucks", "David lives in Goris city."])
+    _, rel_triples = prettify(preds)
+    integrate(rel_triples)
